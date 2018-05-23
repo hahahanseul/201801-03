@@ -7,9 +7,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class ScheduleControlDBAccess {
+public class ScheduleControlDBAccess_test {
 	private Connection createConnection() {
 		Connection con = null;
+		System.out.println("createConnection con:"+con);
 		try
 		{
 			Class.forName("com.mysql.jdbc.Driver");
@@ -42,10 +43,16 @@ public class ScheduleControlDBAccess {
 		}
 	}
 	public ArrayList<stub.HolidayBean> findAllHolidays(String year, String month){
+		System.out.println("findAllHolidays param year:"+year);
+		System.out.println("findAllHolidays param month:"+month);
 		Connection con = createConnection();
+		System.out.println("findAllHolidays con:"+con);
 		PreparedStatement stmt = null;
+		System.out.println("findAllHolidays PreparedStatement:"+stmt);
 		ResultSet rs = null;
+		System.out.println("findAllHolidays ResultSet:"+rs);
 		ArrayList<stub.HolidayBean> list = new ArrayList<>();
+		System.out.println("findAllHolidays ArrayList:"+list);
 		try {
 			String sql = "select 年月日, 祝日名 from 祝日 where 年月日 between ? and ?";
 			stmt = con.prepareStatement(sql);
