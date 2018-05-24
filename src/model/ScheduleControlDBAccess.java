@@ -158,30 +158,41 @@ public class ScheduleControlDBAccess {
 		return list;
 	}
 	public int insert(stub.TaskBean taskBean) {
+		System.out.println("ドライバからもらったtaskBean:"+taskBean);
 		Connection con = createConnection();
+		System.out.println("最初のCon:"+con);
+	//2
 		PreparedStatement stmt = null;
+		System.out.println("最初のstmt:"+stmt);
+	//3
 		int result = 0;
+		System.out.println("result 初期化："+result);
+	//4
 		try {
-			String sql = "insert into タスク values (?,?,?,?,?);";
-			stmt = con.prepareStatement(sql);
-			String year = taskBean.getYear();
-			String month = taskBean.getMonth();
-			String day = taskBean.getDay();
-			String fromHour = taskBean.getFromHour();
-			String fromMinute = taskBean.getFromMinute();
-			String toHour = taskBean.getToHour();
-			String toMinute = taskBean.getToMinute();
-			String kindId = taskBean.getKindId();
-			String memo = taskBean.getMemo();
-			String tYMD = year+month+day;
-			String fromHM = fromHour + fromMinute;
-			String toHM = toHour + toMinute;
-				//ymd  ,  fromhm, tohm, kindid, memo
-			stmt.setString(1,tYMD );
-			stmt.setString(2, fromHM);
-			stmt.setString(3, toHM);
-			stmt.setString(4, kindId);
-			stmt.setString(5,memo);
+			//5
+			stmt = con.prepareStatement("insert into タスク values (?,?,?,?,?);");
+			System.out.println("? 指定なしのstmt ::" +stmt );
+			//6
+			stmt.setString(1,taskBean.getYear()+taskBean.getMonth()+taskBean.getDay()+"ser");
+			System.out.println("年月日 指定のstmt ::" +stmt );
+
+			//7
+			stmt.setString(2, taskBean.getFromHour()+taskBean.getFromMinute());
+			System.out.println("開始時刻 指定のstmt ::" +stmt );
+
+			//8
+			stmt.setString(3, taskBean.getToHour()+taskBean.getToMinute());
+			System.out.println("終了時刻 指定のstmt ::" +stmt );
+
+			//9
+			stmt.setString(4, taskBean.getKindId());
+			System.out.println("種別ID 指定のstmt ::" +stmt );
+
+			//10
+			stmt.setString(5,taskBean.getMemo());
+			System.out.println("メモ 指定のstmt ::" +stmt );
+
+			//11
 			result = stmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println("DBアクセス時にエラーが発生しました。（insert）");

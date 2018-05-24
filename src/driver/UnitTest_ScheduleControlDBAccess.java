@@ -8,13 +8,7 @@
 */
 package driver;
 
-//パッケージのインポート
-import java.util.ArrayList;
-
 import model.ScheduleControlDBAccess;
-//単体テスト用のパッケージのインポート
-import stub.HolidayBean;
-import stub.KindBean;
 import stub.TaskBean;
 
 public class UnitTest_ScheduleControlDBAccess {
@@ -22,7 +16,7 @@ public class UnitTest_ScheduleControlDBAccess {
 	public static void main(String[] args) {
 		ScheduleControlDBAccess dao = new ScheduleControlDBAccess();
 
-
+/*
 		//findAllHolidays()のテスト
 		ArrayList<HolidayBean> holidayList = dao.findAllHolidays("2017", "05");
 		for (HolidayBean bean : holidayList) {
@@ -50,8 +44,8 @@ public class UnitTest_ScheduleControlDBAccess {
 		for (TaskBean bean : taskList) {
 			System.out.println(bean);
 		}
-
-		//insert()のテスト
+*/
+		//insert()のテスト【項番106～137】   나는 102부터임 目安：32項目
 		TaskBean iBean = new TaskBean("2018", "06", "02", "09", "00", "12", "00", "K99", "[その他]", "朝の食事会");
 		int iResult = dao.insert(iBean);
 		if (iResult ==1) {
@@ -59,8 +53,8 @@ public class UnitTest_ScheduleControlDBAccess {
 		}else {
 		      System.out.println("タスク追加失敗しました！！！！");
 		}
-
-		//update()のテスト
+/*
+		//update()のテスト【項番138～169】     目安：32項目
 		TaskBean uBean = new TaskBean("2018", "06", "02", "12", "00", "15", "00", "K99", "[その他]", "お昼の食事");
 		int uResult = dao.update(uBean);
 		if (uResult == 1) {
@@ -68,14 +62,14 @@ public class UnitTest_ScheduleControlDBAccess {
 		} else {
 			System.out.println("タスク修正失敗しました！！！！");
 		}
-
-		//delete()のテスト
+*/
+/*		//delete()のテスト 【項番170～189】 目安：２０項目
 		int dResult = dao.delete("2018", "06", "02");
 		if (dResult == 1) {
 			System.out.println("タスクを削除しました。");
 		} else {
 			System.out.println("タスク削除失敗しました！！！！");
-		}
+		}*/
 	}
 
 }
