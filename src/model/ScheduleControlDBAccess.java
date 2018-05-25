@@ -30,6 +30,7 @@ public class ScheduleControlDBAccess {
 		try {
 			if (con != null) {
 				con.close();
+				System.out.println("closeConnection con is closed");
 			}
 		} catch (SQLException e) {
 			System.out.println("DB切断時にエラーが発生しました。");
@@ -157,42 +158,18 @@ public class ScheduleControlDBAccess {
 
 		return list;
 	}
+
 	public int insert(stub.TaskBean taskBean) {
-		System.out.println("ドライバからもらったtaskBean:"+taskBean);
 		Connection con = createConnection();
-		System.out.println("最初のCon:"+con);
-	//2
 		PreparedStatement stmt = null;
-		System.out.println("最初のstmt:"+stmt);
-	//3
 		int result = 0;
-		System.out.println("result 初期化："+result);
-	//4
 		try {
-			//5
 			stmt = con.prepareStatement("insert into タスク values (?,?,?,?,?);");
-			System.out.println("? 指定なしのstmt ::" +stmt );
-			//6
-			stmt.setString(1,taskBean.getYear()+taskBean.getMonth()+taskBean.getDay()+"ser");
-			System.out.println("年月日 指定のstmt ::" +stmt );
-
-			//7
-			stmt.setString(2, taskBean.getFromHour()+taskBean.getFromMinute());
-			System.out.println("開始時刻 指定のstmt ::" +stmt );
-
-			//8
-			stmt.setString(3, taskBean.getToHour()+taskBean.getToMinute());
-			System.out.println("終了時刻 指定のstmt ::" +stmt );
-
-			//9
+			stmt.setString(1, taskBean.getYear() + taskBean.getMonth() + taskBean.getDay());
+			stmt.setString(2, taskBean.getFromHour() + taskBean.getFromMinute());
+			stmt.setString(3, taskBean.getToHour() + taskBean.getToMinute());
 			stmt.setString(4, taskBean.getKindId());
-			System.out.println("種別ID 指定のstmt ::" +stmt );
-
-			//10
-			stmt.setString(5,taskBean.getMemo());
-			System.out.println("メモ 指定のstmt ::" +stmt );
-
-			//11
+			stmt.setString(5, taskBean.getMemo());
 			result = stmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println("DBアクセス時にエラーが発生しました。（insert）");
@@ -210,30 +187,22 @@ public class ScheduleControlDBAccess {
 		closeConnection(con);
 		return result;
 	}
+
 	public int update(stub.TaskBean taskBean) {
+		System.out.println("ドライバからもらったtaskBean:" + taskBean);
 		Connection con = createConnection();
+		System.out.println("最初のCon:" + con);
 		PreparedStatement stmt = null;
+		System.out.println("最初のstmt:" + stmt);
 		int result = 0;
+		System.out.println("result 初期化：" + result);
 		try {
-			String sql = "update タスク  set  開始時刻 = ?, 終了時刻= ?, 種別ID = ?, メモ = ? WHERE 年月日 = ?";
-			stmt = con.prepareStatement(sql);
-			String year = taskBean.getYear();
-			String month = taskBean.getMonth();
-			String day = taskBean.getDay();
-			String fromHour = taskBean.getFromHour();
-			String fromMinute = taskBean.getFromMinute();
-			String toHour = taskBean.getToHour();
-			String toMinute = taskBean.getToMinute();
-			String kindId = taskBean.getKindId();
-			String memo = taskBean.getMemo();
-			String tYMD = year+month+day;
-			String fromHM = fromHour + fromMinute;
-			String toHM = toHour + toMinute;
-			stmt.setString(1, fromHM);
-			stmt.setString(2, toHM);
-			stmt.setString(3, kindId);
-			stmt.setString(4,memo);
-			stmt.setString(5, tYMD );
+			stmt = con.prepareStatement("update タスク  set  開始時刻 = ?, 終了時刻= ?, 種別ID = ?, メモ = ? WHERE 年月日 = ?");
+			stmt.setString(1, taskBean.getFromHour() + taskBean.getFromMinute());
+			stmt.setString(2, taskBean.getToHour() + taskBean.getToMinute());
+			stmt.setString(3, taskBean.getKindId());
+			stmt.setString(4, taskBean.getMemo());
+			stmt.setString(5, taskBean.getYear() + taskBean.getMonth() + taskBean.getDay());
 			result = stmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println("DBアクセス時にエラーが発生しました。（update）");
@@ -251,23 +220,24 @@ public class ScheduleControlDBAccess {
 		closeConnection(con);
 		return result;
 	}
+
 	public int delete(String year, String month, String day) {
 		Connection con = createConnection();
 		PreparedStatement stmt = null;
 		int result = 0;
 		try {
-			String sql = "delete from タスク  WHERE 年月日 = ?";
-			stmt = con.prepareStatement(sql);
-			String tYMD = year+month+day;
-			stmt.setString(1, tYMD);
+			stmt = con.prepareStatement("delete from タスク  WHERE 年月日 = ?");
+			stmt.setString(1, year + month + day);
 			result = stmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println("DBアクセス時にエラーが発生しました。（delete）");
 			e.printStackTrace();
 		} finally {
 			try {
+				System.out.println("finally 進入");
 				if (stmt != null) {
 					stmt.close();
+					System.out.println("stmt is closed");
 				}
 			} catch (SQLException e) {
 				System.out.println("DBアクセス時にエラーが発生しました。");
