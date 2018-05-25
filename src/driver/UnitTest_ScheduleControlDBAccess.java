@@ -5,7 +5,7 @@
  *　作成日　：　2018/05/24
  *　修正者名：
  *　修正日　：
-*/
+
 package driver;
 
 import java.util.ArrayList;
@@ -69,3 +69,4 @@ public class UnitTest_ScheduleControlDBAccess {
 	}
 
 }
+*/
