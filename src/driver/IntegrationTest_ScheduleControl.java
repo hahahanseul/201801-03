@@ -71,14 +71,14 @@ public class IntegrationTest_ScheduleControl
 		System.out.println("insert()返却値：" + insertRet);
 
 		//ScheduleControl → ScheduleControlDBAccessのテスト【項番７】
-		TaskBean tBean2 = new TaskBean("2018", "06", "26", "10", "30", "12", "30",
+		TaskBean tBean2 = new TaskBean("2018", "06", "27", "10", "30", "12", "30",
 														"K99", "[その他]", "個人面接");
 		int updateRet = ScheduleControl.registerTaskBean(tBean2);
 		System.out.println("【ScheduleControl → ScheduleControlDBAccessの結果⑤】");
 		System.out.println("update()返却値：" + updateRet);
 
 		//ScheduleControl → ScheduleControlDBAccessのテスト【項番８】
-		int deleteRet = ScheduleControl.removeTaskBean("2018", "06", "26");
+		int deleteRet = ScheduleControl.removeTaskBean("2018", "06", "27");
 		System.out.println("【ScheduleControl → ScheduleControlDBAccessの結果⑥】");
 		System.out.println("delete()返却値：" + deleteRet);
 	}
