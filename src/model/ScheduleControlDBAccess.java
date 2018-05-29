@@ -117,7 +117,7 @@ public class ScheduleControlDBAccess {
 		ResultSet rs = null;
 		ArrayList<TaskBean> list = new ArrayList<>();
 		try {
-			String sql = "select t.年月日, t.開始時刻, t.終了時刻, t.種別ID, s.種別名, t.メモ from タスク t inner join 種別 s on t.種別ID = s.種別ID where t.年月日 between ? and ?";
+			String sql = "select t.年月日, t.開始時刻, t.終了時刻, t.種別ID, s.種別名, t.メモ, t.重要 from タスク t inner join 種別 s on t.種別ID = s.種別ID where t.年月日 between ? and ?";
 			stmt = con.prepareStatement(sql);
 			String fromYMD = year + month + "01";
 			String toYMD = year + month + "31";
@@ -133,8 +133,9 @@ public class ScheduleControlDBAccess {
 				String kindId = rs.getString("種別ID");
 				String kindName = rs.getString("種別名");
 				String memo = rs.getString("メモ");
+				int important = rs.getInt("重要");
 				TaskBean bean = new TaskBean(year, month, day, fromHour, fromMinute, toHour,
-						toMinute, kindId, kindName, memo);
+						toMinute, kindId, kindName, memo, important);
 				list.add(bean);
 			}
 		} catch (SQLException e) {
@@ -154,7 +155,6 @@ public class ScheduleControlDBAccess {
 			}
 		}
 		closeConnection(con);
-
 		return list;
 	}
 
@@ -163,16 +163,17 @@ public class ScheduleControlDBAccess {
 		PreparedStatement stmt = null;
 		int result = 0;
 		try {
-			stmt = con.prepareStatement("insert into タスク values (?,?,?,?,?);");
+			stmt = con.prepareStatement("insert into タスク values (?,?,?,?,?,?);");
 			stmt.setString(1, taskBean.getYear() + taskBean.getMonth() + taskBean.getDay());
 			stmt.setString(2, taskBean.getFromHour() + taskBean.getFromMinute());
 			stmt.setString(3, taskBean.getToHour() + taskBean.getToMinute());
 			stmt.setString(4, taskBean.getKindId());
 			stmt.setString(5, taskBean.getMemo());
+			stmt.setInt(6, taskBean.getImportant());
 			result = stmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println("DBアクセス時にエラーが発生しました。（insert）");
-			e.printStackTrace();
+			//e.printStackTrace();
 		} finally {
 			try {
 				if (stmt != null) {
@@ -192,12 +193,13 @@ public class ScheduleControlDBAccess {
 		PreparedStatement stmt = null;
 		int result = 0;
 		try {
-			stmt = con.prepareStatement("update タスク  set  開始時刻 = ?, 終了時刻= ?, 種別ID = ?, メモ = ? WHERE 年月日 = ?");
+			stmt = con.prepareStatement("update タスク  set  開始時刻 = ?, 終了時刻= ?, 種別ID = ?, メモ = ?, 重要 = ? WHERE 年月日 = ?");
 			stmt.setString(1, taskBean.getFromHour() + taskBean.getFromMinute());
 			stmt.setString(2, taskBean.getToHour() + taskBean.getToMinute());
 			stmt.setString(3, taskBean.getKindId());
 			stmt.setString(4, taskBean.getMemo());
-			stmt.setString(5, taskBean.getYear() + taskBean.getMonth() + taskBean.getDay());
+			stmt.setInt(5, taskBean.getImportant());
+			stmt.setString(6, taskBean.getYear() + taskBean.getMonth() + taskBean.getDay());
 			result = stmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println("DBアクセス時にエラーが発生しました。（update）");

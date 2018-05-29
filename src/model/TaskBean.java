@@ -7,9 +7,9 @@ import java.io.Serializable;
  * */
 public class TaskBean implements Serializable {
 	private String year, month, day, fromHour, fromMinute, toHour, toMinute, kindId, kindName, memo;
-
+	private int important;
 	public TaskBean(String year, String month, String day, String fromHour, String fromMinute, String toHour,
-			String toMinute, String kindId, String kindName, String memo) {
+			String toMinute, String kindId, String kindName, String memo,int important) {
 		setYear(year);
 		setMonth(month);
 		setDay(day);
@@ -20,6 +20,7 @@ public class TaskBean implements Serializable {
 		setKindId(kindId);
 		setKindName(kindName);
 		setMemo(memo);
+		setImportant(important);
 	}
 
 	public String getYear() {
@@ -101,5 +102,11 @@ public class TaskBean implements Serializable {
 	public void setMemo(String memo) {
 		this.memo = memo;
 	}
+	public int getImportant() {
+		return important;
+	}
 
+	public void setImportant(int important) {
+		this.important = important;
+	}
 }
