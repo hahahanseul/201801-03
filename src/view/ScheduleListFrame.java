@@ -292,6 +292,7 @@ public class ScheduleListFrame extends JFrame
                               taskBean = null;
                               taskArea.setText("");
                        }
+                       setCalendar();
                }
                //日にちを設定する。
                public void setDay(int day)
@@ -344,6 +345,7 @@ public class ScheduleListFrame extends JFrame
                //タスクを設定する。
                public void setTaskBean(TaskBean taskBean)
                {
+
                        this.taskBean = taskBean;
                        if(taskBean != null)
                        {
@@ -351,7 +353,11 @@ public class ScheduleListFrame extends JFrame
                                       taskBean.getFromHour() + ":" + taskBean.getFromMinute()
                                       + "-" + taskBean.getToHour() + ":" + taskBean.getToMinute()
                                       + "\n" + taskBean.getKindName() + "\n" + taskBean.getMemo());
+                              if(taskBean.getImportant() == 1 ) {
+                           	   setBackground(Color.RED);
+                              }
                        }
+
                }
         }
 }

@@ -1,10 +1,10 @@
 /*
- *　クラス名：ScheduleEditDialog
- *　概要　　：「スケジュール編集」画面を管理する。
- *　作成者名：模範解答
- *　作成日　：2017年5月26日
- *　修正者名：
- *　修正日　：
+ *　クラス名	：ScheduleEditDialog
+ *　概要　　	：「スケジュール編集」画面を管理する。
+ *　作成者名	：Goh Jiayi Jaslyn
+ *　作成日　	：2017年5月28日
+ *　修正者名	：
+ *　修正日　	：
 */
 
 //パッケージの定義
@@ -21,6 +21,7 @@ import java.util.Calendar;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -34,35 +35,34 @@ import model.KindBean;
 import model.TaskBean;
 
 //ScheduleEditDialogクラスの定義
-public class ScheduleEditDialog extends JDialog
-{
+public class ScheduleEditDialog extends JDialog {
 	//スタティック変数の定義
-	public static final int REGISTER = 1;	//「登録」ボタン押下状態
-	public static final int CLOSE = 0;		//「閉じる」ボタン押下状態
-	public static final int REMOVE = -1;	//「削除」ボタン押下状態
+	public static final int REGISTER = 1; //「登録」ボタン押下状態
+	public static final int CLOSE = 0; //「閉じる」ボタン押下状態
+	public static final int REMOVE = -1; //「削除」ボタン押下状態
 
 	//インスタンス変数の定義
-	private ArrayList<KindBean> kindList;	//種別リスト
-	private int status;						//ボタン押下状態
-	private int year;						//年
-	private int month;						//月
-	private int day;						//日
+	private ArrayList<KindBean> kindList; //種別リスト
+	private int status; //ボタン押下状態
+	private int year; //年
+	private int month; //月
+	private int day; //日
 
-	private ScheduleEditDialog dialog;		//自インスタンスの参照
-	private Font fontL;						//フォント大
-	private Font fontM;						//フォント中
+	private ScheduleEditDialog dialog; //自インスタンスの参照
+	private Font fontL; //フォント大
+	private Font fontM; //フォント中
 
-	private JLabel ymdLabel;				//「年月日(曜)」ラベル
-	private JRadioButton timeSpRadio;		//「時刻指定」ラジオボタン
-	private JComboBox fromHMCombo;			//「開始時刻」コンボボックス
-	private JComboBox toHMCombo;			//「終了時刻」コンボボックス
-	private JRadioButton daySpRadio;		//「終日指定」ラジオボタン
-	private JComboBox kindNameCombo;		//「種別名」コンボボックス
-	private JTextArea memoArea;				//「メモ」テキストエリア
+	private JLabel ymdLabel; //「年月日(曜)」ラベル
+	private JRadioButton timeSpRadio; //「時刻指定」ラジオボタン
+	private JComboBox fromHMCombo; //「開始時刻」コンボボックス
+	private JComboBox toHMCombo; //「終了時刻」コンボボックス
+	private JRadioButton daySpRadio; //「終日指定」ラジオボタン
+	private JCheckBox importantChk; //「重要」チェックボックス
+	private JComboBox kindNameCombo; //「種別名」コンボボックス
+	private JTextArea memoArea; //「メモ」テキストエリア
 
 	//コンストラクタの定義
-	public ScheduleEditDialog(ArrayList<KindBean> kindList)
-	{
+	public ScheduleEditDialog(ArrayList<KindBean> kindList) {
 		this.kindList = kindList;
 		status = CLOSE;
 		year = 0;
@@ -85,15 +85,13 @@ public class ScheduleEditDialog extends JDialog
 
 	//メソッドの定義
 	//ウインドウサイズを自動的に調整する。
-	public void addNotify()
-	{
+	public void addNotify() {
 		super.addNotify();
 		pack();
 	}
 
 	//年月日を設定する。
-	public void setYearMonthDay(int year, int month, int day)
-	{
+	public void setYearMonthDay(int year, int month, int day) {
 		status = CLOSE;
 
 		this.year = year;
@@ -107,7 +105,7 @@ public class ScheduleEditDialog extends JDialog
 
 		Calendar cal = Calendar.getInstance();
 		cal.set(year, month - 1, day);
-		String weekStrAry[] = {"日", "月", "火", "水", "木", "金", "土"};
+		String weekStrAry[] = { "日", "月", "火", "水", "木", "金", "土" };
 		String weekStr = weekStrAry[cal.get(Calendar.DAY_OF_WEEK) - 1];
 
 		ymdLabel.setText(yearStr + "年" + monthStr + "月" + dayStr + "日(" + weekStr + ")");
@@ -122,22 +120,23 @@ public class ScheduleEditDialog extends JDialog
 	}
 
 	//タスクを設定する。
-	public void setTaskBean(TaskBean taskBean)
-	{
+	public void setTaskBean(TaskBean taskBean) {
 		String fromHour = taskBean.getFromHour();
 		String fromMinute = taskBean.getFromMinute();
 		String toHour = taskBean.getToHour();
 		String toMinute = taskBean.getToMinute();
-		if(fromHour.equals("00") == true && fromMinute.equals("00") == true && toHour.equals("24") == true && toMinute.equals("00") == true)
-		{
+		int important = taskBean.getImportant();
+		if (fromHour.equals("00") == true && fromMinute.equals("00") == true && toHour.equals("24") == true
+				&& toMinute.equals("00") == true) {
 			daySpRadio.setSelected(true);
 			fromHMCombo.setSelectedIndex(18);
 			fromHMCombo.setEnabled(false);
 			toHMCombo.setSelectedIndex(36);
 			toHMCombo.setEnabled(false);
-		}
-		else
-		{
+			if(important == 1) {
+				importantChk.setSelected(true);
+			}
+		} else {
 			timeSpRadio.setSelected(true);
 			fromHMCombo.setSelectedIndex((Integer.parseInt(fromHour) * 60 + Integer.parseInt(fromMinute)) / 30);
 			fromHMCombo.setEnabled(true);
@@ -147,10 +146,8 @@ public class ScheduleEditDialog extends JDialog
 
 		String kindID = taskBean.getKindId();
 		int idx;
-		for(idx = 0; idx < kindList.size(); idx++)
-		{
-			if(kindID.equals(kindList.get(idx).getId()) == true)
-			{
+		for (idx = 0; idx < kindList.size(); idx++) {
+			if (kindID.equals(kindList.get(idx).getId()) == true) {
 				kindNameCombo.setSelectedIndex(idx);
 				break;
 			}
@@ -161,8 +158,7 @@ public class ScheduleEditDialog extends JDialog
 	}
 
 	//タスクを取得する。
-	public TaskBean getTaskBean()
-	{
+	public TaskBean getTaskBean() {
 		String yearStr = String.format("%04d", year);
 		String monthStr = String.format("%02d", month);
 		String dayStr = String.format("%02d", day);
@@ -171,46 +167,43 @@ public class ScheduleEditDialog extends JDialog
 		String fromMinute;
 		String toHour;
 		String toMinute;
-		if(timeSpRadio.isSelected() == true)
-		{
-			String fromHM = (String)(fromHMCombo.getSelectedItem());
+		int important = 0;
+		if (timeSpRadio.isSelected() == true) {
+			String fromHM = (String) (fromHMCombo.getSelectedItem());
 			fromHour = fromHM.substring(0, 2);
 			fromMinute = fromHM.substring(3);
-			String toHM = (String)(toHMCombo.getSelectedItem());
+			String toHM = (String) (toHMCombo.getSelectedItem());
 			toHour = toHM.substring(0, 2);
 			toMinute = toHM.substring(3);
-		}
-		else
-		{
+		} else {
 			fromHour = "00";
 			fromMinute = "00";
 			toHour = "24";
 			toMinute = "00";
 		}
+		if(importantChk.isSelected() == true ) {
+			important = 1;
+		}
 
 		int idx = kindNameCombo.getSelectedIndex();
 		String kindID = kindList.get(idx).getId();
 		String kindName = kindList.get(idx).getName();
-
 		String memo = memoArea.getText();
-		int important = 0;
 
-		TaskBean taskBean = new TaskBean(yearStr, monthStr, dayStr, fromHour, fromMinute, toHour, toMinute, kindID, kindName, memo,important);
+		TaskBean taskBean = new TaskBean(yearStr, monthStr, dayStr, fromHour, fromMinute, toHour, toMinute, kindID,
+				kindName, memo, important);
 		return taskBean;
 	}
 
 	//ボタン押下状態を調べる。
-	public int isStatus()
-	{
+	public int isStatus() {
 		return status;
 	}
 
 	//NorthPanelクラスの定義（内部クラス）
-	private class NorthPanel extends JPanel implements ActionListener
-	{
+	private class NorthPanel extends JPanel implements ActionListener {
 		//コンストラクタの定義
-		public NorthPanel()
-		{
+		public NorthPanel() {
 			setLayout(new BorderLayout());
 
 			ymdLabel = new JLabel("年月日(曜)", JLabel.CENTER);
@@ -226,10 +219,8 @@ public class ScheduleEditDialog extends JDialog
 			fromHMCombo = new JComboBox();
 			fromHMCombo.setFont(fontM);
 			int hour, minute;
-			for(hour = 0; hour < 24; hour++)
-			{
-				for(minute = 0; minute < 60; minute = minute + 30)
-				{
+			for (hour = 0; hour < 24; hour++) {
+				for (minute = 0; minute < 60; minute = minute + 30) {
 					fromHMCombo.addItem(String.format("%02d:%02d", hour, minute));
 				}
 			}
@@ -240,10 +231,8 @@ public class ScheduleEditDialog extends JDialog
 
 			toHMCombo = new JComboBox();
 			toHMCombo.setFont(fontM);
-			for(hour = 0; hour < 24; hour++)
-			{
-				for(minute = 0; minute < 60; minute = minute + 30)
-				{
+			for (hour = 0; hour < 24; hour++) {
+				for (minute = 0; minute < 60; minute = minute + 30) {
 					toHMCombo.addItem(String.format("%02d:%02d", hour, minute));
 				}
 			}
@@ -252,7 +241,7 @@ public class ScheduleEditDialog extends JDialog
 			JLabel toHMLabel = new JLabel("まで", JLabel.LEFT);
 			toHMLabel.setFont(fontM);
 
-			JPanel tmpPanel2= new JPanel(new FlowLayout(FlowLayout.LEFT));
+			JPanel tmpPanel2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			tmpPanel2.add(timeSpRadio);
 			tmpPanel2.add(fromHMCombo);
 			tmpPanel2.add(fromHMLabel);
@@ -263,8 +252,13 @@ public class ScheduleEditDialog extends JDialog
 			daySpRadio.setFont(fontM);
 			daySpRadio.addActionListener(this);
 
-			JPanel tmpPanel3= new JPanel(new FlowLayout(FlowLayout.LEFT));
+			importantChk = new JCheckBox("重要");
+			importantChk.setFont(fontM);
+			importantChk.addActionListener(this);
+
+			JPanel tmpPanel3 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			tmpPanel3.add(daySpRadio);
+			tmpPanel3.add(importantChk);
 
 			JPanel tmpPanel4 = new JPanel(new BorderLayout());
 			tmpPanel4.add(tmpPanel2, BorderLayout.NORTH);
@@ -275,8 +269,7 @@ public class ScheduleEditDialog extends JDialog
 
 			kindNameCombo = new JComboBox();
 			kindNameCombo.setFont(fontM);
-			for(KindBean kindBean : kindList)
-			{
+			for (KindBean kindBean : kindList) {
 				kindNameCombo.addItem(kindBean.getName());
 			}
 			kindNameCombo.addActionListener(this);
@@ -299,15 +292,12 @@ public class ScheduleEditDialog extends JDialog
 
 		//メソッドの定義
 		//｢開始時刻」ラジオボタン押下，及び「終了時刻」ラジオボタン押下。
-		public void actionPerformed(ActionEvent e)
-		{
-			if(e.getSource() == timeSpRadio)
-			{
+		public void actionPerformed(ActionEvent e) {
+			if (e.getSource() == timeSpRadio) {
 				fromHMCombo.setEnabled(true);
 				toHMCombo.setEnabled(true);
-			}
-			else if(e.getSource() == daySpRadio)
-			{
+
+			} else if (e.getSource() == daySpRadio) {
 				fromHMCombo.setEnabled(false);
 				toHMCombo.setEnabled(false);
 			}
@@ -315,11 +305,9 @@ public class ScheduleEditDialog extends JDialog
 	}
 
 	//CenterPanelクラスの定義（内部クラス）
-	private class CenterPanel extends JPanel
-	{
+	private class CenterPanel extends JPanel {
 		//コンストラクタの定義
-		public CenterPanel()
-		{
+		public CenterPanel() {
 			setLayout(new BorderLayout());
 
 			memoArea = new JTextArea(8, 40);
@@ -330,15 +318,13 @@ public class ScheduleEditDialog extends JDialog
 	}
 
 	//SouthPanelクラスの定義（内部クラス）
-	private class SouthPanel extends JPanel implements ActionListener
-	{
+	private class SouthPanel extends JPanel implements ActionListener {
 		//インスタンス変数の定義
-		private JButton registerBtn;		//「登録」ボタン
-		private JButton removeBtn;			//「削除」ボタン
+		private JButton registerBtn; //「登録」ボタン
+		private JButton removeBtn; //「削除」ボタン
 
 		//コンストラクタの定義
-		public SouthPanel()
-		{
+		public SouthPanel() {
 			setLayout(new FlowLayout(FlowLayout.CENTER));
 
 			registerBtn = new JButton("登録");
@@ -359,27 +345,24 @@ public class ScheduleEditDialog extends JDialog
 
 		//メソッドの定義
 		//｢登録」ボタン押下，及び「削除」ボタン押下。
-		public void actionPerformed(ActionEvent e)
-		{
-			if(e.getSource() == registerBtn)
-			{
+		public void actionPerformed(ActionEvent e) {
+			if (e.getSource() == registerBtn) {
 				int fromHMIdx = fromHMCombo.getSelectedIndex();
 				int toHMIdx = toHMCombo.getSelectedIndex();
-				if(timeSpRadio.isSelected() == true && fromHMIdx > toHMIdx)
-				{
-					JOptionPane.showConfirmDialog(dialog, "終了時刻が不正です。", "エラー", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
+				if (timeSpRadio.isSelected() == true && fromHMIdx > toHMIdx) {
+					JOptionPane.showConfirmDialog(dialog, "終了時刻が不正です。", "エラー", JOptionPane.DEFAULT_OPTION,
+							JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				status = REGISTER;
 				JLabel label1 = new JLabel("登録しました。");
-				JOptionPane.showMessageDialog(this,label1, "登録", JOptionPane.INFORMATION_MESSAGE);
-			}
-			else if(e.getSource() == removeBtn)
-			{
+				JOptionPane.showMessageDialog(this, label1, "登録", JOptionPane.INFORMATION_MESSAGE);
+
+			} else if (e.getSource() == removeBtn) {
 				status = REMOVE;
 				JLabel label2 = new JLabel("削除しましすか？");
 				int remAns;
-				remAns = JOptionPane.showConfirmDialog(this,label2,"削除", JOptionPane.YES_NO_CANCEL_OPTION);
+				remAns = JOptionPane.showConfirmDialog(this, label2, "削除", JOptionPane.YES_NO_CANCEL_OPTION);
 				if (remAns == 1) {
 					return;
 				}
