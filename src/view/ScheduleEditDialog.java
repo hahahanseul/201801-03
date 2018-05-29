@@ -21,7 +21,6 @@ import java.util.Calendar;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -60,7 +59,6 @@ public class ScheduleEditDialog extends JDialog
 	private JRadioButton daySpRadio;		//「終日指定」ラジオボタン
 	private JComboBox kindNameCombo;		//「種別名」コンボボックス
 	private JTextArea memoArea;				//「メモ」テキストエリア
-	private JCheckBox importantChk;
 
 	//コンストラクタの定義
 	public ScheduleEditDialog(ArrayList<KindBean> kindList)
@@ -130,11 +128,6 @@ public class ScheduleEditDialog extends JDialog
 		String fromMinute = taskBean.getFromMinute();
 		String toHour = taskBean.getToHour();
 		String toMinute = taskBean.getToMinute();
-		int important = taskBean.getImportant();
-		System.out.println("set important " + important);
-		if(important == 1 ) {
-			importantChk.setSelected(true);
-		}
 		if(fromHour.equals("00") == true && fromMinute.equals("00") == true && toHour.equals("24") == true && toMinute.equals("00") == true)
 		{
 			daySpRadio.setSelected(true);
@@ -178,7 +171,6 @@ public class ScheduleEditDialog extends JDialog
 		String fromMinute;
 		String toHour;
 		String toMinute;
-		int important = 0;
 		if(timeSpRadio.isSelected() == true)
 		{
 			String fromHM = (String)(fromHMCombo.getSelectedItem());
@@ -195,19 +187,16 @@ public class ScheduleEditDialog extends JDialog
 			toHour = "24";
 			toMinute = "00";
 		}
-		if(importantChk.isSelected() == true) {
-			important = 1;
-		}
+
 		int idx = kindNameCombo.getSelectedIndex();
 		String kindID = kindList.get(idx).getId();
 		String kindName = kindList.get(idx).getName();
 
 		String memo = memoArea.getText();
+		int important = 0;
 
-		TaskBean taskBean = new TaskBean(yearStr, monthStr, dayStr, fromHour, fromMinute, toHour, toMinute, kindID, kindName, memo, important);
-		System.out.println("task bean"+taskBean);
+		TaskBean taskBean = new TaskBean(yearStr, monthStr, dayStr, fromHour, fromMinute, toHour, toMinute, kindID, kindName, memo,important);
 		return taskBean;
-
 	}
 
 	//ボタン押下状態を調べる。
@@ -239,7 +228,7 @@ public class ScheduleEditDialog extends JDialog
 			int hour, minute;
 			for(hour = 0; hour < 24; hour++)
 			{
-				for(minute = 0; minute < 60; minute = minute + 5)
+				for(minute = 0; minute < 60; minute = minute + 30)
 				{
 					fromHMCombo.addItem(String.format("%02d:%02d", hour, minute));
 				}
@@ -253,7 +242,7 @@ public class ScheduleEditDialog extends JDialog
 			toHMCombo.setFont(fontM);
 			for(hour = 0; hour < 24; hour++)
 			{
-				for(minute = 0; minute < 60; minute = minute + 5)
+				for(minute = 0; minute < 60; minute = minute + 30)
 				{
 					toHMCombo.addItem(String.format("%02d:%02d", hour, minute));
 				}
@@ -292,15 +281,9 @@ public class ScheduleEditDialog extends JDialog
 			}
 			kindNameCombo.addActionListener(this);
 
-			importantChk= new JCheckBox("重要！");
-			importantChk.setFont(fontM);
-			importantChk.addActionListener(this);
-
-
 			JPanel tmpPanel5 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			tmpPanel5.add(kindNameLabel);
 			tmpPanel5.add(kindNameCombo);
-			tmpPanel5.add(importantChk);
 
 			JPanel tmpPanel6 = new JPanel(new BorderLayout());
 			tmpPanel6.add(tmpPanel4, BorderLayout.NORTH);
@@ -388,10 +371,18 @@ public class ScheduleEditDialog extends JDialog
 					return;
 				}
 				status = REGISTER;
+				JLabel label1 = new JLabel("登録しました。");
+				JOptionPane.showMessageDialog(this,label1, "登録", JOptionPane.INFORMATION_MESSAGE);
 			}
 			else if(e.getSource() == removeBtn)
 			{
 				status = REMOVE;
+				JLabel label2 = new JLabel("削除しましすか？");
+				int remAns;
+				remAns = JOptionPane.showConfirmDialog(this,label2,"削除", JOptionPane.YES_NO_CANCEL_OPTION);
+				if (remAns == 1) {
+					return;
+				}
 			}
 			dialog.setVisible(false);
 		}
