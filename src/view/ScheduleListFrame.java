@@ -3,8 +3,8 @@
  *　概要　　：「スケジュール表」画面を管理する。
  *　作成者名：模範解答
  *　作成日　：2017年5月26日
- *　修正者名：
- *　修正日　：
+ *　修正者名： Kim Hanseul
+ *　修正日　：2018年5月29日
 */
 //パッケージの定義
 package view;
@@ -45,6 +45,8 @@ public class ScheduleListFrame extends JFrame
         private Font fontL;                                         //フォント大
         private Font fontM;                                         //フォント中
         private Font fontS;                                         //フォント小
+        private Font fontI;
+        private Font fontB;
 
         //スタティックメソッドの定義
         //「スケジュール表」画面を表示する。
@@ -65,6 +67,9 @@ public class ScheduleListFrame extends JFrame
                fontL = new Font("ＭＳ ゴシック", Font.PLAIN, 30);
                fontM = new Font("ＭＳ ゴシック", Font.PLAIN, 24);
                fontS = new Font("ＭＳ ゴシック", Font.PLAIN, 16);
+               fontB = new Font("ＭＳ ゴシック", Font.BOLD, 14) ;
+               fontI = new Font("ＭＳ ゴシック", Font.ITALIC, 14);
+
                setTitle("スケジュール表");
                setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                getContentPane().setLayout(new BorderLayout());
@@ -246,7 +251,7 @@ public class ScheduleListFrame extends JFrame
                        holidayArea = new JTextArea();
                        holidayArea.setPreferredSize(new Dimension(100, 20));
                        holidayArea.setOpaque(false);
-                       holidayArea.setFont(fontS);
+                       holidayArea.setFont(fontI);
                        holidayArea.setEditable(false);
                        taskArea = new JTextArea();
                        taskArea.setPreferredSize(new Dimension(100, 60));
@@ -281,7 +286,7 @@ public class ScheduleListFrame extends JFrame
                               taskArea.setText(
                                       taskBean.getFromHour() + ":" + taskBean.getFromMinute()
                                       + "-" + taskBean.getToHour() + ":" + taskBean.getToMinute()
-                                      + "\n" + taskBean.getKindName() + "\n" + taskBean.getMemo());
+                                      + "\n" + taskBean.getKindName() + "\n" +taskBean.getMemo());
                        }
                        else if(status == ScheduleEditDialog.REMOVE)
                        {
@@ -320,7 +325,7 @@ public class ScheduleListFrame extends JFrame
                               }
                               else if(year == Integer.parseInt(thisYear) && month == Integer.parseInt(thisMonth) &&day == Integer.parseInt(today))
                               {
-                                      setBackground(Color.BLUE);
+                                      setBackground(Color.ORANGE);
                               }
                               else
                               {
@@ -349,12 +354,12 @@ public class ScheduleListFrame extends JFrame
                        this.taskBean = taskBean;
                        if(taskBean != null)
                        {
-                              taskArea.setText(
-                                      taskBean.getFromHour() + ":" + taskBean.getFromMinute()
-                                      + "-" + taskBean.getToHour() + ":" + taskBean.getToMinute()
-                                      + "\n" + taskBean.getKindName() + "\n" + taskBean.getMemo());
+                              taskArea.setText( taskBean.getFromHour() + ":" + taskBean.getFromMinute()
+                              + "-" + taskBean.getToHour() + ":" + taskBean.getToMinute()
+                              + "\n" + taskBean.getKindName() + "\n" +taskBean.getMemo());
                               if(taskBean.getImportant() == 1 ) {
-                           	   setBackground(Color.RED);
+                               taskArea.setFont(fontB);
+                           	   taskArea.setForeground(Color.RED);
                               }
                        }
 
